@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { Salon } from '@/integrations/supabase/types';
+import { type Salon } from '@/integrations/supabase/types/salon';
 
 // Fix for default marker icons in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -20,8 +20,9 @@ interface MapProps {
 const Map = ({ salons, center = [40.7128, -74.0060], zoom = 13 }: MapProps) => {
   return (
     <MapContainer
-      center={center as L.LatLngExpression}
+      center={center}
       zoom={zoom}
+      scrollWheelZoom={false}
       style={{ height: '400px', width: '100%' }}
       className="rounded-lg shadow-md"
     >
@@ -39,7 +40,7 @@ const Map = ({ salons, center = [40.7128, -74.0060], zoom = 13 }: MapProps) => {
               <div className="p-2">
                 <h3 className="font-semibold">{salon.name}</h3>
                 <p className="text-sm text-gray-600">{salon.address}</p>
-                <p className="text-sm">Rating: {salon.rating || 'N/A'}</p>
+                <p className="text-sm">Rating: {salon.rating?.toFixed(1) || 'N/A'}</p>
               </div>
             </Popup>
           </Marker>

@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useState } from "react";
 import Map from "@/components/Map";
 import SalonFilters from "@/components/SalonFilters";
-import { Salon } from "@/integrations/supabase/types";
+import { type Salon } from "@/integrations/supabase/types/salon";
 
 const Salons = () => {
   const [filters, setFilters] = useState({ search: "", rating: "" });
