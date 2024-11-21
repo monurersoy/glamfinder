@@ -17,36 +17,37 @@ interface MapProps {
   zoom?: number;
 }
 
-const Map = ({ salons, center = [40.7128, -74.0060], zoom = 13 }: MapProps) => {
+const Map = ({ salons, center = [40.7589, -73.9851], zoom = 13 }: MapProps) => {
   return (
-    <MapContainer
-      center={center as L.LatLngExpression}
-      zoom={zoom}
-      scrollWheelZoom={false}
-      style={{ height: '400px', width: '100%' }}
-      className="rounded-lg shadow-md"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {salons.map((salon) => (
-        salon.latitude && salon.longitude ? (
-          <Marker
-            key={salon.id}
-            position={[salon.latitude, salon.longitude] as L.LatLngExpression}
-          >
-            <Popup>
-              <div className="p-2">
-                <h3 className="font-semibold">{salon.name}</h3>
-                <p className="text-sm text-gray-600">{salon.address}</p>
-                <p className="text-sm">Rating: {salon.rating?.toFixed(1) || 'N/A'}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ) : null
-      ))}
-    </MapContainer>
+    <div style={{ height: '400px', width: '100%' }} className="rounded-lg shadow-md">
+      <MapContainer
+        center={center}
+        zoom={zoom}
+        scrollWheelZoom={false}
+        style={{ height: '100%', width: '100%' }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {salons.map((salon) => (
+          salon.latitude && salon.longitude ? (
+            <Marker
+              key={salon.id}
+              position={[salon.latitude, salon.longitude] as L.LatLngExpression}
+            >
+              <Popup>
+                <div className="p-2">
+                  <h3 className="font-semibold">{salon.name}</h3>
+                  <p className="text-sm text-gray-600">{salon.address}</p>
+                  <p className="text-sm">Rating: {salon.rating?.toFixed(1) || 'N/A'}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ) : null
+        ))}
+      </MapContainer>
+    </div>
   );
 };
 
