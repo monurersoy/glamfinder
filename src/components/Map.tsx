@@ -21,10 +21,11 @@ const Map = ({ salons, center = [40.7589, -73.9851], zoom = 13 }: MapProps) => {
   return (
     <div style={{ height: '400px', width: '100%' }} className="rounded-lg shadow-md">
       <MapContainer
-        center={center as L.LatLngExpression}
+        center={center}
         zoom={zoom}
         scrollWheelZoom={false}
         style={{ height: '100%', width: '100%' }}
+        className="leaflet-container"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -34,7 +35,7 @@ const Map = ({ salons, center = [40.7589, -73.9851], zoom = 13 }: MapProps) => {
           salon.latitude && salon.longitude ? (
             <Marker
               key={salon.id}
-              position={[salon.latitude, salon.longitude] as L.LatLngExpression}
+              position={[salon.latitude, salon.longitude]}
             >
               <Popup>
                 <div className="p-2">
