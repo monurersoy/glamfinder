@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -21,7 +20,7 @@ interface MapProps {
 const Map = ({ salons, center = [40.7128, -74.0060], zoom = 13 }: MapProps) => {
   return (
     <MapContainer
-      center={center}
+      center={center as L.LatLngExpression}
       zoom={zoom}
       style={{ height: '400px', width: '100%' }}
       className="rounded-lg shadow-md"
@@ -34,13 +33,13 @@ const Map = ({ salons, center = [40.7128, -74.0060], zoom = 13 }: MapProps) => {
         salon.latitude && salon.longitude ? (
           <Marker
             key={salon.id}
-            position={[salon.latitude, salon.longitude]}
+            position={[salon.latitude, salon.longitude] as L.LatLngExpression}
           >
             <Popup>
               <div className="p-2">
                 <h3 className="font-semibold">{salon.name}</h3>
                 <p className="text-sm text-gray-600">{salon.address}</p>
-                <p className="text-sm">Rating: {salon.rating}/5</p>
+                <p className="text-sm">Rating: {salon.rating || 'N/A'}</p>
               </div>
             </Popup>
           </Marker>

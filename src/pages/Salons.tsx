@@ -58,7 +58,7 @@ const Salons = () => {
               <p className="text-sm text-gray-500">{salon.address}</p>
               <div className="flex items-center mt-2">
                 <span className="text-yellow-400">★</span>
-                <span className="ml-1">{salon.rating.toFixed(1)}</span>
+                <span className="ml-1">{salon.rating ? salon.rating.toFixed(1) : 'No ratings yet'}</span>
               </div>
             </CardHeader>
             <CardContent>
