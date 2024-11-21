@@ -20,15 +20,15 @@ interface MapProps {
 const Map = ({ salons, center = [40.7128, -74.0060], zoom = 13 }: MapProps) => {
   return (
     <MapContainer
-      center={center}
+      center={center as L.LatLngExpression}
       zoom={zoom}
       scrollWheelZoom={false}
       style={{ height: '400px', width: '100%' }}
       className="rounded-lg shadow-md"
     >
       <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {salons.map((salon) => (
         salon.latitude && salon.longitude ? (
