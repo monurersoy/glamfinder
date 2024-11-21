@@ -7,6 +7,8 @@ import { createClient } from "@supabase/supabase-js";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import Index from "./pages/Index";
 import Salons from "./pages/Salons";
+import CustomerDashboard from "./pages/CustomerDashboard";
+import BusinessDashboard from "./pages/BusinessDashboard";
 
 const queryClient = new QueryClient();
 const supabase = createClient(
@@ -24,6 +26,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/salons" element={<Salons />} />
+            <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+            <Route path="/business-dashboard" element={<BusinessDashboard />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
