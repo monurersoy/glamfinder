@@ -21,7 +21,7 @@ const Map = ({ salons, center = [40.7589, -73.9851], zoom = 13 }: MapProps) => {
   return (
     <div style={{ height: '400px', width: '100%' }} className="rounded-lg shadow-md">
       <MapContainer
-        center={center}
+        center={center as L.LatLngExpression}
         zoom={zoom}
         scrollWheelZoom={false}
         style={{ height: '100%', width: '100%' }}
