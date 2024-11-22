@@ -30,14 +30,13 @@ const BusinessDashboard = () => {
         navigate("/customer-dashboard");
       }
 
-      // Check if user has a salon
-      const { data: salon } = await supabase
+      // Check if user has a salon - modified to handle no results
+      const { data: salons } = await supabase
         .from("salons")
         .select("id")
-        .eq("owner_id", session.user.id)
-        .single();
+        .eq("owner_id", session.user.id);
 
-      setHasSalon(!!salon);
+      setHasSalon(salons && salons.length > 0);
     };
 
     checkUserType();
@@ -47,13 +46,13 @@ const BusinessDashboard = () => {
     await supabase.auth.signOut();
     navigate("/");
     toast({
-      title: "Signed out successfully",
-      description: "You have been signed out of your account.",
+      title: "Başarıyla çıkış yapıldı",
+      description: "Hesabınızdan çıkış yaptınız.",
     });
   };
 
   if (hasSalon === null) {
-    return <div>Loading...</div>;
+    return <div>Yükleniyor...</div>;
   }
 
   return (
@@ -61,9 +60,9 @@ const BusinessDashboard = () => {
       {!hasSalon ? (
         <Card>
           <CardHeader>
-            <CardTitle>Set Up Your Salon</CardTitle>
+            <CardTitle>Salonunuzu Oluşturun</CardTitle>
             <CardDescription>
-              Provide information about your salon to get started
+              Başlamak için salonunuz hakkında bilgi verin
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -73,14 +72,14 @@ const BusinessDashboard = () => {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Welcome to Your Business Dashboard</CardTitle>
-            <CardDescription>Manage your salon and services</CardDescription>
+            <CardTitle>İşletme Panelinize Hoş Geldiniz</CardTitle>
+            <CardDescription>Salonunuzu ve hizmetlerinizi yönetin</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <Button onClick={() => navigate("/manage-salon")}>Manage Salon</Button>
+              <Button onClick={() => navigate("/manage-salon")}>Salonu Yönet</Button>
               <Button variant="outline" onClick={handleSignOut}>
-                Sign Out
+                Çıkış Yap
               </Button>
             </div>
           </CardContent>

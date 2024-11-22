@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "@supabase/auth-helpers-react";
 import { useQuery } from "@tanstack/react-query";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,22 +16,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-
-type ServiceInput = {
-  categoryId: string;
-  name: string;
-  price: string;
-  duration: string;
-  description?: string;
-};
+import { ServiceCard } from "./salon/ServiceCard";
+import { ServiceForm } from "./salon/ServiceForm";
+import type { ServiceInput } from "./salon/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type FormValues = {
   name: string;
@@ -45,13 +34,14 @@ const SalonSetupForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingServiceIndex, setEditingServiceIndex] = useState<number | null>(null);
 
   const form = useForm<FormValues>({
     defaultValues: {
       name: "",
       description: "",
       address: "",
-      services: [{ categoryId: "", name: "", price: "", duration: "", description: "" }],
+      services: [],
     },
   });
 
@@ -71,8 +61,8 @@ const SalonSetupForm = () => {
   const onSubmit = async (data: FormValues) => {
     if (!session?.user?.id) {
       toast({
-        title: "Error",
-        description: "You must be logged in to create a salon",
+        title: "Hata",
+        description: "Salon oluşturmak için giriş yapmalısınız",
         variant: "destructive",
       });
       return;
@@ -80,7 +70,6 @@ const SalonSetupForm = () => {
 
     setIsSubmitting(true);
     try {
-      // Insert salon
       const { data: salon, error: salonError } = await supabase
         .from("salons")
         .insert({
@@ -94,7 +83,6 @@ const SalonSetupForm = () => {
 
       if (salonError) throw salonError;
 
-      // Insert services
       const servicesData = data.services.map((service) => ({
         name: service.name,
         description: service.description,
@@ -111,14 +99,14 @@ const SalonSetupForm = () => {
       if (servicesError) throw servicesError;
 
       toast({
-        title: "Success",
-        description: "Your salon has been created successfully!",
+        title: "Başarılı",
+        description: "Salonunuz başarıyla oluşturuldu!",
       });
       
       navigate("/business-dashboard");
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Hata",
         description: error.message,
         variant: "destructive",
       });
@@ -133,6 +121,7 @@ const SalonSetupForm = () => {
       ...services,
       { categoryId: "", name: "", price: "", duration: "", description: "" },
     ]);
+    setEditingServiceIndex(services.length);
   };
 
   const removeService = (index: number) => {
@@ -144,16 +133,16 @@ const SalonSetupForm = () => {
   };
 
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Salon Name</FormLabel>
+              <FormLabel>Salon Adı</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your salon name" {...field} />
+                <Input placeholder="Salon adını girin" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -165,10 +154,10 @@ const SalonSetupForm = () => {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Açıklama</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Describe your salon and what makes it special"
+                  placeholder="Salonunuzu ve özel yanlarını açıklayın"
                   {...field}
                 />
               </FormControl>
@@ -182,9 +171,9 @@ const SalonSetupForm = () => {
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Address</FormLabel>
+              <FormLabel>Adres</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your salon's address" {...field} />
+                <Input placeholder="Salon adresini girin" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -193,142 +182,51 @@ const SalonSetupForm = () => {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium">Services</h3>
+            <h3 className="text-lg font-medium">Hizmetler</h3>
             <Button type="button" variant="outline" onClick={addService}>
-              Add Service
+              <Plus className="h-4 w-4 mr-2" />
+              Hizmet Ekle
             </Button>
           </div>
 
-          {form.watch("services").map((_, index) => (
-            <div key={index} className="space-y-4 p-4 border rounded-lg">
-              <div className="flex justify-end">
-                {index > 0 && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeService(index)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-
-              <FormField
-                control={form.control}
-                name={`services.${index}.categoryId`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {categories?.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          <div className="grid gap-4">
+            {form.watch("services").map((service, index) => (
+              <ServiceCard
+                key={index}
+                service={service}
+                onEdit={() => setEditingServiceIndex(index)}
+                onDelete={() => removeService(index)}
               />
-
-              <FormField
-                control={form.control}
-                name={`services.${index}.name`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Service Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter service name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name={`services.${index}.price`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price ($)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter price"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name={`services.${index}.duration`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Duration (minutes)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter duration"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name={`services.${index}.description`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description (optional)</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Describe this service"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
+        <Dialog open={editingServiceIndex !== null} onOpenChange={() => setEditingServiceIndex(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Hizmet Düzenle</DialogTitle>
+            </DialogHeader>
+            {editingServiceIndex !== null && (
+              <ServiceForm index={editingServiceIndex} categories={categories || []} />
+            )}
+          </DialogContent>
+        </Dialog>
 
         <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Setting up your salon...
+              Salon oluşturuluyor...
             </>
           ) : (
             <>
               <Check className="mr-2 h-4 w-4" />
-              Create Salon
+              Salon Oluştur
             </>
           )}
         </Button>
       </form>
-    </Form>
+    </FormProvider>
   );
 };
 
