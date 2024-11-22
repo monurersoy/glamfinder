@@ -18,7 +18,7 @@ const ManageSalon = () => {
   const [activeTab, setActiveTab] = useState("services");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const { data: salon, isLoading } = useQuery({
+  const { data: salon } = useQuery({
     queryKey: ["salon"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -37,8 +37,10 @@ const ManageSalon = () => {
   });
 
   const { data: appointments } = useQuery({
-    queryKey: ["appointments", selectedDate],
+    queryKey: ["appointments", selectedDate, salon?.id],
     queryFn: async () => {
+      if (!salon?.id) return [];
+      
       const startOfDay = new Date(selectedDate);
       startOfDay.setHours(0, 0, 0, 0);
       const endOfDay = new Date(selectedDate);
@@ -47,7 +49,7 @@ const ManageSalon = () => {
       const { data, error } = await supabase
         .from("appointments")
         .select("*")
-        .eq("salon_id", salon?.id)
+        .eq("salon_id", salon.id)
         .gte("start_time", startOfDay.toISOString())
         .lte("start_time", endOfDay.toISOString());
 
@@ -62,10 +64,6 @@ const ManageSalon = () => {
       navigate("/");
     }
   }, [session, navigate]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   if (!salon) {
     return <div>Salon not found</div>;
