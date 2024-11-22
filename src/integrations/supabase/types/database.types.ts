@@ -152,7 +152,7 @@ interface AppointmentsTable {
     customer_name: string;
     start_time: string;
     end_time: string;
-    status: string;
+    status: 'pending' | 'confirmed' | 'cancelled';
     created_at: string;
     updated_at: string;
   };
@@ -164,7 +164,7 @@ interface AppointmentsTable {
     customer_name: string;
     start_time: string;
     end_time: string;
-    status?: string;
+    status?: 'pending' | 'confirmed' | 'cancelled';
     created_at?: string;
     updated_at?: string;
   };
@@ -176,7 +176,7 @@ interface AppointmentsTable {
     customer_name?: string;
     start_time?: string;
     end_time?: string;
-    status?: string;
+    status?: 'pending' | 'confirmed' | 'cancelled';
     created_at?: string;
     updated_at?: string;
   };
