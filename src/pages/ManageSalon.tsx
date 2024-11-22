@@ -6,12 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { tr } from "date-fns/locale";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { AppointmentsTab } from "@/components/salon/AppointmentsTab";
+import type { Appointment } from "@/integrations/supabase/types";
 
 const ManageSalon = () => {
   const session = useSession();
@@ -54,7 +52,7 @@ const ManageSalon = () => {
         .lte("start_time", endOfDay.toISOString());
 
       if (error) throw error;
-      return data;
+      return data as Appointment[];
     },
     enabled: !!salon?.id,
   });
@@ -157,63 +155,12 @@ const ManageSalon = () => {
                   <div>Image management coming soon...</div>
                 </TabsContent>
 
-                <TabsContent value="appointments" className="space-y-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <Card className="flex-1">
-                      <CardHeader>
-                        <CardTitle>Bugünün Randevuları</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        {appointments?.length === 0 ? (
-                          <p className="text-muted-foreground">
-                            Bugün için randevu bulunmuyor
-                          </p>
-                        ) : (
-                          <div className="space-y-4">
-                            {appointments?.map((appointment) => (
-                              <div
-                                key={appointment.id}
-                                className="flex justify-between items-center p-3 bg-secondary rounded-lg"
-                              >
-                                <div>
-                                  <p className="font-medium">
-                                    {format(new Date(appointment.start_time), "HH:mm", {
-                                      locale: tr,
-                                    })}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {appointment.customer_name}
-                                  </p>
-                                </div>
-                                <Button variant="outline" size="sm">
-                                  Detaylar
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-
-                    <Card className="flex-1">
-                      <CardHeader>
-                        <CardTitle>Takvim</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={(date) => date && setSelectedDate(date)}
-                          className="rounded-md border"
-                          modifiersStyles={{
-                            booked: { backgroundColor: "rgb(239 68 68)" },
-                            available: { backgroundColor: "rgb(34 197 94)" },
-                            partial: { backgroundColor: "rgb(234 179 8)" },
-                          }}
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
+                <TabsContent value="appointments">
+                  <AppointmentsTab
+                    appointments={appointments}
+                    selectedDate={selectedDate}
+                    onDateSelect={(date) => date && setSelectedDate(date)}
+                  />
                 </TabsContent>
               </Tabs>
             </CardContent>
