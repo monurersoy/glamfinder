@@ -3,31 +3,15 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "@supabase/auth-helpers-react";
 import { useQuery } from "@tanstack/react-query";
-import { Check, Loader2, Plus } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-import { ServiceCard } from "./salon/ServiceCard";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { BasicInfoForm } from "./salon/BasicInfoForm";
+import { ServicesList } from "./salon/ServicesList";
 import { ServiceForm } from "./salon/ServiceForm";
-import type { ServiceInput } from "./salon/types";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-type FormValues = {
-  name: string;
-  description: string;
-  address: string;
-  services: ServiceInput[];
-};
+import type { SalonFormValues } from "./salon/types";
 
 const SalonSetupForm = () => {
   const session = useSession();
@@ -36,7 +20,7 @@ const SalonSetupForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingServiceIndex, setEditingServiceIndex] = useState<number | null>(null);
 
-  const form = useForm<FormValues>({
+  const form = useForm<SalonFormValues>({
     defaultValues: {
       name: "",
       description: "",
@@ -58,7 +42,7 @@ const SalonSetupForm = () => {
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: SalonFormValues) => {
     if (!session?.user?.id) {
       toast({
         title: "Hata",
@@ -132,82 +116,37 @@ const SalonSetupForm = () => {
     );
   };
 
+  const handleServiceSave = () => {
+    setEditingServiceIndex(null);
+  };
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Salon Adı</FormLabel>
-              <FormControl>
-                <Input placeholder="Salon adını girin" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <BasicInfoForm />
+        <ServicesList
+          onAddService={addService}
+          onEditService={setEditingServiceIndex}
+          onRemoveService={removeService}
         />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Açıklama</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Salonunuzu ve özel yanlarını açıklayın"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Adres</FormLabel>
-              <FormControl>
-                <Input placeholder="Salon adresini girin" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium">Hizmetler</h3>
-            <Button type="button" variant="outline" onClick={addService}>
-              <Plus className="h-4 w-4 mr-2" />
-              Hizmet Ekle
-            </Button>
-          </div>
-
-          <div className="grid gap-4">
-            {form.watch("services").map((service, index) => (
-              <ServiceCard
-                key={index}
-                service={service}
-                onEdit={() => setEditingServiceIndex(index)}
-                onDelete={() => removeService(index)}
-              />
-            ))}
-          </div>
-        </div>
-
-        <Dialog open={editingServiceIndex !== null} onOpenChange={() => setEditingServiceIndex(null)}>
+        <Dialog 
+          open={editingServiceIndex !== null} 
+          onOpenChange={(open) => !open && setEditingServiceIndex(null)}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Hizmet Düzenle</DialogTitle>
             </DialogHeader>
-            {editingServiceIndex !== null && (
-              <ServiceForm index={editingServiceIndex} categories={categories || []} />
+            {editingServiceIndex !== null && categories && (
+              <>
+                <ServiceForm index={editingServiceIndex} categories={categories} />
+                <DialogFooter>
+                  <Button type="button" onClick={handleServiceSave}>
+                    Kaydet
+                  </Button>
+                </DialogFooter>
+              </>
             )}
           </DialogContent>
         </Dialog>

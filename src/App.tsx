@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Salons from "./pages/Salons";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import BusinessDashboard from "./pages/BusinessDashboard";
+import ManageSalon from "./pages/ManageSalon";
 
 const queryClient = new QueryClient();
 const supabase = createClient(
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/salons" element={<Salons />} />
             <Route path="/customer-dashboard" element={<CustomerDashboard />} />
             <Route path="/business-dashboard" element={<BusinessDashboard />} />
+            <Route path="/manage-salon" element={<ManageSalon />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
