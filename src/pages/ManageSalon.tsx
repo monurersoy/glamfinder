@@ -21,9 +21,7 @@ const ManageSalon = () => {
         .from("salons")
         .select(`
           *,
-          services (*),
-          salon_images (*),
-          salon_working_hours (*)
+          services (*)
         `)
         .eq("owner_id", session?.user?.id)
         .single();
