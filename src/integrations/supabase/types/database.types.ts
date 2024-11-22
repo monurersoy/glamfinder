@@ -180,27 +180,5 @@ interface AppointmentsTable {
     created_at?: string;
     updated_at?: string;
   };
-  Relationships: [
-    {
-      foreignKeyName: "appointments_salon_id_fkey";
-      columns: ["salon_id"];
-      isOneToOne: false;
-      referencedRelation: "salons";
-      referencedColumns: ["id"];
-    },
-    {
-      foreignKeyName: "appointments_service_id_fkey";
-      columns: ["service_id"];
-      isOneToOne: false;
-      referencedRelation: "services";
-      referencedColumns: ["id"];
-    },
-    {
-      foreignKeyName: "appointments_customer_id_fkey";
-      columns: ["customer_id"];
-      isOneToOne: false;
-      referencedRelation: "profiles";
-      referencedColumns: ["id"];
-    }
-  ];
+  Relationships: [];
 }
