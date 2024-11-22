@@ -87,7 +87,8 @@ const SalonSetupForm = () => {
         description: "Salonunuz başarıyla oluşturuldu!",
       });
       
-      navigate("/business-dashboard");
+      // Navigate after successful creation
+      navigate("/manage-salon");
     } catch (error: any) {
       toast({
         title: "Hata",

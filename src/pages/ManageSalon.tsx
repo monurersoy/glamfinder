@@ -12,7 +12,7 @@ const ManageSalon = () => {
   const session = useSession();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("images");
+  const [activeTab, setActiveTab] = useState("services");
 
   const { data: salon, isLoading } = useQuery({
     queryKey: ["salon"],
@@ -57,18 +57,18 @@ const ManageSalon = () => {
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
-              <TabsTrigger value="images">Fotoğraflar</TabsTrigger>
               <TabsTrigger value="services">Hizmetler</TabsTrigger>
+              <TabsTrigger value="images">Fotoğraflar</TabsTrigger>
               <TabsTrigger value="hours">Çalışma Saatleri</TabsTrigger>
               <TabsTrigger value="appointments">Randevular</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="images">
-              <div>Image management coming soon...</div>
-            </TabsContent>
-
             <TabsContent value="services">
               <div>Service management coming soon...</div>
+            </TabsContent>
+
+            <TabsContent value="images">
+              <div>Image management coming soon...</div>
             </TabsContent>
 
             <TabsContent value="hours">
