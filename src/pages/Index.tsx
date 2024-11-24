@@ -44,16 +44,16 @@ const Index = () => {
 
         if (error) {
           toast({
-            title: "Error updating profile",
-            description: "There was an error setting up your account.",
+            title: "Profil güncellenirken hata oluştu",
+            description: "Hesabınız oluşturulurken bir hata oluştu.",
             variant: "destructive",
           });
           return;
         }
 
         toast({
-          title: "Account created successfully",
-          description: `Welcome to your ${type} account!`,
+          title: "Hesap başarıyla oluşturuldu",
+          description: `${type === "customer" ? "Müşteri" : "İşletme"} hesabınıza hoş geldiniz!`,
         });
 
         navigate(type === "customer" ? "/customer-dashboard" : "/business-dashboard");
@@ -66,28 +66,28 @@ const Index = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Find Your Perfect Beauty Service
+            Mükemmel Güzellik Hizmetinizi Bulun
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Connect with top beauty professionals or showcase your salon services to eager customers.
-            Join our community today!
+            En iyi güzellik uzmanlarıyla bağlantı kurun veya salonunuzun hizmetlerini
+            müşterilerinize gösterin. Topluluğumuza bugün katılın!
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader>
-              <CardTitle>For Customers</CardTitle>
+              <CardTitle>Müşteriler İçin</CardTitle>
               <CardDescription>
-                Discover and book beauty services in your area
+                Bölgenizdeki güzellik hizmetlerini keşfedin ve randevu alın
               </CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 mb-6 text-gray-600">
-                <li>✨ Browse local beauty salons</li>
-                <li>📅 Easy appointment booking</li>
-                <li>⭐ Read and write reviews</li>
-                <li>💫 Get personalized recommendations</li>
+                <li>✨ Yerel güzellik salonlarını inceleyin</li>
+                <li>📅 Kolay randevu alma</li>
+                <li>⭐ Yorumları okuyun ve yazın</li>
+                <li>💫 Kişiselleştirilmiş öneriler alın</li>
               </ul>
               <Dialog>
                 <DialogTrigger asChild>
@@ -95,14 +95,14 @@ const Index = () => {
                     className="w-full bg-purple-600 hover:bg-purple-700"
                     onClick={() => handleSignup("customer")}
                   >
-                    Sign Up as Customer
+                    Müşteri Olarak Kaydol
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>
-                    <DialogTitle>Customer Sign Up</DialogTitle>
+                    <DialogTitle>Müşteri Kaydı</DialogTitle>
                     <DialogDescription>
-                      Create your account to start booking beauty services
+                      Güzellik hizmetleri almak için hesabınızı oluşturun
                     </DialogDescription>
                   </DialogHeader>
                   <Auth
@@ -118,17 +118,17 @@ const Index = () => {
 
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader>
-              <CardTitle>For Beauty Professionals</CardTitle>
+              <CardTitle>Güzellik Uzmanları İçin</CardTitle>
               <CardDescription>
-                Grow your business and reach more clients
+                İşletmenizi büyütün ve daha fazla müşteriye ulaşın
               </CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 mb-6 text-gray-600">
-                <li>🏪 Create your business profile</li>
-                <li>📊 Manage appointments</li>
-                <li>💼 Showcase your services</li>
-                <li>📈 Grow your client base</li>
+                <li>🏪 İşletme profilinizi oluşturun</li>
+                <li>📊 Randevuları yönetin</li>
+                <li>💼 Hizmetlerinizi sergileyin</li>
+                <li>📈 Müşteri tabanınızı büyütün</li>
               </ul>
               <Dialog>
                 <DialogTrigger asChild>
@@ -136,14 +136,14 @@ const Index = () => {
                     className="w-full bg-purple-600 hover:bg-purple-700"
                     onClick={() => handleSignup("business")}
                   >
-                    Sign Up as Business
+                    İşletme Olarak Kaydol
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>
-                    <DialogTitle>Business Sign Up</DialogTitle>
+                    <DialogTitle>İşletme Kaydı</DialogTitle>
                     <DialogDescription>
-                      Create your business account to start reaching new clients
+                      Yeni müşterilere ulaşmak için işletme hesabınızı oluşturun
                     </DialogDescription>
                   </DialogHeader>
                   <Auth

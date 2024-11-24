@@ -143,7 +143,7 @@ interface ServiceCategoriesTable {
   Relationships: [];
 }
 
-interface AppointmentsTable {
+export interface AppointmentsTable {
   Row: {
     id: string;
     salon_id: string;
@@ -180,5 +180,27 @@ interface AppointmentsTable {
     created_at?: string;
     updated_at?: string;
   };
-  Relationships: [];
+  Relationships: [
+    {
+      foreignKeyName: "appointments_salon_id_fkey";
+      columns: ["salon_id"];
+      isOneToOne: false;
+      referencedRelation: "salons";
+      referencedColumns: ["id"];
+    },
+    {
+      foreignKeyName: "appointments_service_id_fkey";
+      columns: ["service_id"];
+      isOneToOne: false;
+      referencedRelation: "services";
+      referencedColumns: ["id"];
+    },
+    {
+      foreignKeyName: "appointments_customer_id_fkey";
+      columns: ["customer_id"];
+      isOneToOne: false;
+      referencedRelation: "users";
+      referencedColumns: ["id"];
+    }
+  ];
 }
