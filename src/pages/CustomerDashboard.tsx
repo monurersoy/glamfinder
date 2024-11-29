@@ -36,8 +36,8 @@ const CustomerDashboard = () => {
     await supabase.auth.signOut();
     navigate("/");
     toast({
-      title: "Signed out successfully",
-      description: "You have been signed out of your account.",
+      title: "Başarıyla çıkış yapıldı",
+      description: "Hesabınızdan çıkış yaptınız.",
     });
   };
 
@@ -45,13 +45,13 @@ const CustomerDashboard = () => {
     <div className="container mx-auto px-4 py-8">
       <Card>
         <CardHeader>
-          <CardTitle>Welcome to Your Customer Dashboard</CardTitle>
-          <CardDescription>Find and book beauty services in your area</CardDescription>
+          <CardTitle>Müşteri Panelinize Hoş Geldiniz</CardTitle>
+          <CardDescription>Yakınınızdaki güzellik hizmetlerini bulup randevu oluşturun</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <Button onClick={() => navigate("/salons")}>Browse Salons</Button>
-            <Button variant="outline" onClick={handleSignOut}>Sign Out</Button>
+            <Button onClick={() => navigate("/salons")}>Salon Ara</Button>
+            <Button variant="outline" onClick={handleSignOut}>Çıkış Yap</Button>
           </div>
         </CardContent>
       </Card>
