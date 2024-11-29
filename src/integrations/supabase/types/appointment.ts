@@ -1,3 +1,3 @@
 import type { AppointmentsTable } from './database.types';
 
-export interface Appointment extends AppointmentsTable['Row'] {}
+export type Appointment = AppointmentsTable['Row'];
