@@ -3,7 +3,7 @@ import { tr } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import type { Appointment } from "@/integrations/supabase/types";
+import type { Appointment } from "@/integrations/supabase/types/appointment";
 
 interface AppointmentsTabProps {
   appointments: Appointment[] | undefined;

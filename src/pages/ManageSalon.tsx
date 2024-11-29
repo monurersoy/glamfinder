@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { AppointmentsTab } from "@/components/salon/AppointmentsTab";
-import type { Appointment } from "@/integrations/supabase/types";
+import type { Appointment } from "@/integrations/supabase/types/appointment";
 
 const ManageSalon = () => {
   const session = useSession();
@@ -195,3 +195,4 @@ const ManageSalon = () => {
 };
 
 export default ManageSalon;
+

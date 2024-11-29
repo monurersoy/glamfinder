@@ -1,3 +1,3 @@
-import type { Database } from './database.types';
+import type { AppointmentsTable } from './tables';
 
-export type Appointment = Database['public']['Tables']['appointments']['Row'];
+export type Appointment = AppointmentsTable['Row'];
